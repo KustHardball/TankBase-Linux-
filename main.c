@@ -67,7 +67,7 @@ int main(){
     int port = start_scan();
     //start_engines(port);
     stepper_start();
-    logic_start();
+    logic_start(&port);
     char buff[BUFF_SIZE] = "";
     delay(100);
 

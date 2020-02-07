@@ -13,40 +13,36 @@
 #include <sys/stat.h>	/* S_IXXX flags */
 #include <sys/types.h>	/* mode_t */
 #include <unistd.h>
+#include "transmit.h"
 
-#define SPI_DESCRIPTOR "/dev/spidev0.0"
 #define BUFFER_SIZE	64
 
 
 pthread_t logic_thread;
 extern sem_t semaphore;
+static uint8_t* prt;
+static struct values old_params; 
 
 
+// Then you want to change channels or entity which that channels drive? you must change code HERE!
+uint8_t compare_data(){
+	sem_wait(&semaphore);
+	if(params.time != old_params.time){
+	sem_post(&semaphore);
+	return 1;
+	}
+	else{
+	sem_post(&semaphore);
+	return 0;
+	}
+}
 
 
 
 
 void* logic(void* thread_data){
-	int res;
-	char buffer[BUFFER_SIZE];
-	buffer[0]='f';
-	res = open(SPI_DESCRIPTOR,O_RDWR);
-	if (res == -1) printf("SPI ERROR!\n");
-	else{
-		printf("SPI opened\n");		
-		for (int i =0; i <1000; i++){
-			 write(res, buffer, 1);
-			 //printf ("%c\n",buffer[0]);
-			}
-		}
-
-
-
-	//res = wiringPiSPISetup (0, 500000);
-	//if (res>=0) printf("SPI bus connected to descriptor: %d\n", res);
-	//else printf("SPI ERROR!\n");
-
-
+if(compare_data()) tx_pocket();	
+delay(PROCESSING_RATE);
 }
 
 
@@ -54,8 +50,11 @@ void* logic(void* thread_data){
 
 
 
-void logic_start(){
+void logic_start(uint8_t* port){
+	prt=port;
 	printf("Starting main logic\n");
+	init_tx(prt);
+	old_params = params;
 	pthread_create(&logic_thread, NULL, logic, NULL);
 }
 	

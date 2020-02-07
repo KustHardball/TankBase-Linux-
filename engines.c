@@ -64,8 +64,7 @@ void left_stop(){
 	digitalWrite(LEFT_ENGINE_BIT1_PIN,0);
 	digitalWrite(LEFT_ENGINE_BIT2_PIN,0);
 #ifdef DEBUG_MODE
-	printf("LeftStop ");
-	printf("\n");
+	printf("LeftStop \n");
 #endif
 }
 void righ_forward(uint8_t speed){
@@ -213,10 +212,6 @@ lasttime = params.time;
 moving = params.ch[1];
 direction = params.ch[0];
 sem_post(&semaphore);
-//printf("%d",moving);
-//printf("\n");
-//printf("%d",direction);
-//printf("\n");
 set_eng_condition();
 }
 else {
@@ -248,6 +243,7 @@ void start_engines(int prt){
 	digitalWrite(LEFT_ENGINE_BIT2_PIN,0);
 	digitalWrite(RIGHT_ENGINE_BIT1_PIN,0);
 	digitalWrite(RIGHT_ENGINE_BIT2_PIN,0);
+	init_I2Cconnect();
 	pthread_create(&engines_thread, NULL, drive_engines, NULL);
 	printf("engines started\n");
 }

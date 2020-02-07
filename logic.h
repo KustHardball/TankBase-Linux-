@@ -1,3 +1,3 @@
 
 
-void logic_start();
+void logic_start(uint8_t* port);

@@ -1,7 +1,7 @@
 
 //#define DEBUG_MODE
 
-
+#define CRC_POLYNOME 0x1021
 #define LEFT_ENGINE_BIT1_PIN 22
 #define LEFT_ENGINE_BIT2_PIN 23
 #define RIGHT_ENGINE_BIT1_PIN 24
@@ -16,7 +16,8 @@
 #define ENGINE_ACCELERATE_PIN 5
 #define ADC_PIN 7
 #define ACCELEROMETER_PIN 0
-
+#define CH 16 //channels
+#define PACKAGE_SIZE 8 //payload size to tower
 
 //channels values
 #define MAX_POINT 16191
@@ -41,6 +42,10 @@
 //connect to AVR device vith voltage and curent ADC and engines PWM
 #define DEV_ADDRESS 0x10
 #define DEVICE_I2C "/dev/i2c-2"
+
+
+//logic processing and tower packages
+#define PROCESSING_RATE 10  //ms
 
 
 struct values {

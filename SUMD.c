@@ -9,6 +9,7 @@
 #include "var.h"
 #include <unistd.h>
 #include <stdlib.h>
+#include "crc.h"
 
 #define CH 16  //количество каналов
 
@@ -28,31 +29,13 @@ int count =0;
 
 
 
-uint16_t CRC16(uint16_t crc_calc, uint8_t value){
-uint8_t i;
-crc_calc = crc_calc ^ (uint16_t)value<<8;
-for(i=0; i<8; i++) {
-	if (crc_calc & 0x8000) crc_calc = (crc_calc << 1) ^ CRC_POLYNOME;
-	else crc_calc = (crc_calc << 1);
-	}
-	return crc_calc;
-}
-
-
-
-
-
- uint8_t CRC(uint8_t* data){   //считаем контрольню сумму полученного пакета и сравниваем с пришедшей
-	uint16_t crc = 0x0000;
+uint8_t CRC(uint8_t* data){   //считаем контрольню сумму полученного пакета и сравниваем с пришедшей
 	uint16_t pack_crc;
-for (uint8_t i=0;i<CHANNELS-2;i++){
-crc=CRC16(crc,data[i]);
-}
-pack_crc = (uint16_t)data[CHANNELS-2]<<8^data[CHANNELS-1];
-if(crc==pack_crc){
-	return 1;
-}
-else return 0;
+	pack_crc = (uint16_t)data[CHANNELS-2]<<8^data[CHANNELS-1];
+	if(crc16_calc(data, CHANNELS-2)==pack_crc){
+		return 1;
+	}
+	else return 0;
 }
 
 
